@@ -6,7 +6,8 @@
   "permissions": ["storage"],
   "host_permissions": [
     "https://*.miketec.com.br/*",
-    "http://*.aws.voeazul.com.br/*"
+    "http://*.aws.voeazul.com.br/*",
+    "https://*.aztalent.app/*"
   ],
   "background": {
     "service_worker": "background.js"

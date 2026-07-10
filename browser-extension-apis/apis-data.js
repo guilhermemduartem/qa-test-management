@@ -449,6 +449,39 @@ window.APIS_DATA = {
         "qa": "https://workflow-api.qapolarisk8.miketec.com.br",
         "stg": "https://workflow-api.stgpolarisk8.miketec.com.br"
       }
+    },
+    {
+      "id": "talenttrack-core",
+      "name": "TalentTrack - Core",
+      "healthPath": "/healthcheck",
+      "method": "GET",
+      "envUrls": {
+        "dev-orion": "https://api.dev.aztalent.app",
+        "stg": "https://api.stg.aztalent.app",
+        "prod": "https://api.aztalent.app"
+      }
+    },
+    {
+      "id": "talenttrack-onetoone",
+      "name": "TalentTrack - One to One",
+      "healthPath": "/healthcheck",
+      "method": "GET",
+      "envUrls": {
+        "dev-orion": "https://onetoone-api.dev.aztalent.app",
+        "stg": "https://onetoone-api.stg.aztalent.app",
+        "prod": "https://onetoone-api.aztalent.app"
+      }
+    },
+    {
+      "id": "talenttrack-nr1",
+      "name": "TalentTrack - NR1",
+      "healthPath": "/healthcheck",
+      "method": "GET",
+      "envUrls": {
+        "dev-orion": "https://nr1-api.dev.aztalent.app",
+        "stg": "https://nr1-api.stg.aztalent.app",
+        "prod": "https://nr1-api.aztalent.app"
+      }
     }
   ]
 };
