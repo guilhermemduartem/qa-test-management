@@ -1,85 +1,89 @@
-# Painel QA Reporter — React (produção)
+# QA Reporter
 
-Gerador de evidências de QA migrado de site estático (JS vanilla) para **React + Vite + TypeScript**,
-mantendo o backend **Supabase** e o motor de relatórios (preview + export PDF/DOCX) idêntico ao original.
+Plataforma web completa de **gestão e documentação de QA** — do planejamento de testes à geração de evidências, passando por integração com Azure DevOps, monitoramento de APIs e colaboração em tempo real entre a equipe.
+
+**🔗 Demo:** [qas-reporter.netlify.app](https://qas-reporter.netlify.app/#/login)
+
+Construído com **React + TypeScript + Vite** no front e **Supabase** (Postgres + Auth + Realtime + Storage) no back, sem servidor próprio para manter.
+
+---
+
+## Funcionalidades
+
+### 📄 Relatórios de evidência
+- Editor de relatório com preview em tempo real, upload de imagens e formatação rica (negrito, listas etc.)
+- Exportação em **PDF** (pixel-perfect, captura o próprio preview) e **DOCX**
+- **Colaboração ao vivo**: um relatório pode virar uma sessão compartilhada — dois QAs editando o mesmo documento ao mesmo tempo, com indicador de presença ("quem está online") via Supabase Realtime
+
+### 🧪 Gestão de Testes
+- Planos, casos de teste, execuções (*runs*), rastreabilidade requisito ↔ caso
+- Gestão de defeitos com **sincronização bidirecional com Azure DevOps** (cria bug, adiciona comentários, acompanha status)
+- Sessões exploratórias, dashboard com indicadores e templates dinâmicos de bug por projeto
+
+### 🔌 Módulo de APIs
+- Cliente de API estilo Postman: coleções, execução em lote, importação de `.postman_collection`
+- **Health Check** de ambientes/serviços com configuração compartilhada entre toda a equipe (não fica presa ao navegador de quem criou)
+
+### 🛠️ Ferramentas de apoio ao QA
+- Gerador de massa de dados (CPF/CNPJ, cartão, endereço), validador de nota fiscal, formatador de IDs, conversor OFX↔Base64
+- Duas **extensões de navegador** complementares (geração de dados de teste e health-check de APIs direto no browser)
+
+### 🔐 Administração e permissões
+- Modelo de papéis (`admin`, `qa`, `viewer`) refletido tanto no front quanto em **Row Level Security no Postgres** — a regra de quem pode criar/editar/excluir vive no banco, não só na UI
+- Gestão de usuários, PAT do Azure DevOps por usuário e conexões org/projeto configuráveis por admin
+
+---
+
+## Destaques técnicos
+
+Alguns problemas reais resolvidos durante o desenvolvimento:
+
+- **Export de PDF sem servidor**: o PDF é gerado no client rasterizando o preview HTML (`html2canvas` + `jsPDF`). Imagens de evidência trafegam como *data URL* (não URL pública) especificamente para evitar que o `canvas` seja "contaminado" por CORS ao exportar.
+- **Cache de imagens fora do localStorage**: evidências em base64 podem estourar a cota do `localStorage`; o cache fica no **IndexedDB**, com o relatório guardando apenas uma chave — resolve um bug real de "relatório abre com dados antigos".
+- **Colaboração em tempo real sem conflito**: edição concorrente é resolvida com controle de revisão (`rev`) + merge seletivo, evitando que o upload assíncrono de uma imagem sobrescreva uma edição de texto feita durante o upload.
+- **RLS como fonte de verdade**: funções `SECURITY DEFINER` no Postgres (`qa_is_admin`, `qa_can_write`) centralizam a regra de permissão — a UI e o banco ficam alinhados por design, não por convenção.
+
+---
 
 ## Stack
 
-- **Vite** + **React 18** + **TypeScript**
-- **react-router-dom** (HashRouter — funciona em qualquer host estático, sem config de servidor)
-- **@supabase/supabase-js** — persistência (usuários, templates, imagens, passos)
-- **html2canvas** + **jspdf** — export PDF (captura do preview)
-- **docx** — export DOCX
-- **xlsx** — importação em massa de "Passo a Passo"
+**Front-end:** React 18 · TypeScript · Vite · React Router
+**Back-end:** Supabase (Postgres, Auth, Realtime, Storage, Edge Functions)
+**Exportação:** html2canvas, jsPDF, docx, xlsx
+**Integrações:** Azure DevOps REST API
 
-## Pré-requisitos
-
-- Node.js 18+ (testado com 22) e npm.
-- Um projeto Supabase com as tabelas das migrations aplicadas (ver `supabase/migrations/`).
-
-## Configuração
-
-1. Copie `.env.example` para `.env` e preencha:
-
-   ```env
-   VITE_SUPABASE_URL=https://SEU-PROJETO.supabase.co
-   VITE_SUPABASE_ANON_KEY=sb_publishable_xxxxxxxx
-   ```
-
-   > Use **apenas** a chave publishable/anon — nunca a `service_role`.
-
-2. (Se ainda não criou as tabelas) aplique as migrations em `supabase/migrations/` no seu projeto Supabase
-   (via Supabase CLI `supabase db push` ou colando o SQL no editor).
-
-## Rodando
+## Rodando localmente
 
 ```bash
-npm install      # instala dependências
-npm run dev      # ambiente de desenvolvimento (http://localhost:5173)
-npm run build    # build de produção (tsc --noEmit + vite build) → dist/
-npm run preview  # serve o build de produção localmente
+npm install
+cp .env.example .env      # preencha VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY
+npm run dev                # http://localhost:5173
 ```
 
-### Login padrão (seed)
+Aplique as migrations em `supabase/migrations/` no seu projeto Supabase antes do primeiro acesso.
 
-Na primeira execução são criados: `admin/admin`, `qa/qa`, `leitura/leitura`.
-**Troque/remova estes usuários antes de produção.**
-
-## Deploy
-
-O build gera arquivos estáticos em `dist/`. Publique em qualquer host estático
-(Netlify, Vercel, S3, Nginx, etc.). Como usamos **HashRouter**, não é necessário
-configurar fallback de SPA — rotas como `#/admin` funcionam direto.
-
-> Lembre-se de definir as variáveis `VITE_*` no ambiente de build do host
-> (elas são embutidas no bundle no momento do `vite build`).
+```bash
+npm run build      # build de produção → dist/
+npm run preview    # serve o build localmente
+```
 
 ## Estrutura
 
 ```
 src/
-  lib/            supabase, auth, storage, reportEngine, exporters, reportData, utils, toast, loading
+  lib/            supabase, auth, azureDevOps, reportEngine, exporters, apisStorage...
   context/        AuthProvider, ToastProvider, LoadingProvider
-  hooks/          useReport (estado + autosave), useTheme
-  components/     Sidebar, Modal, DocumentPreview, CriterionCard, StepItem, ImageDropzone
-  pages/          LoginPage, ReportPage, AdminPage, ReportDataPage
-  styles/         styles.css (portado 1:1 do original + estilos do login)
-supabase/migrations/   schema do banco (inalterado)
+  hooks/          useReport (estado + autosave + modo sessão), useTheme
+  components/     Sidebar, DocumentPreview, CriterionCard, StepItem, ImageDropzone
+  pages/
+    tests/        Casos, Planos, Runs, Defeitos, Exploratório, Dashboard, Azure
+    apis/         Health Check, Runner, Bulk Import, Config
+    tools/        Gerador de dados, validadores, conversores
+supabase/migrations/   schema completo do banco (RLS incluída)
+browser-extension/         extensão Chrome — gerador de dados de teste
+browser-extension-apis/    extensão Chrome — health check de APIs
 ```
 
-## ⚠️ Relatórios (parte sensível)
+## Segurança
 
-- `src/lib/reportEngine.ts` (`buildDocumentHTML`) gera o **HTML do documento**.
-- `src/components/DocumentPreview.tsx` injeta esse HTML mantendo os ids
-  `#preview-scroll` / `#document-wrapper` / `#document-preview`.
-- `src/lib/exporters.ts` (`exportPDF`) **captura esse DOM** com html2canvas → o PDF é a imagem do preview.
-
-Qualquer mudança no HTML/CSS do preview altera o PDF. Ao mexer aqui, **gere um PDF antes e depois e compare**.
-
-## Notas
-
-- Segurança: ver [`SECURITY.md`](./SECURITY.md). A autenticação foi portada 1:1 do original e
-  **não é segura** para dados sensíveis sem o hardening descrito lá.
-- O bundle principal é grande (~1,5 MB) por embutir docx/xlsx/html2canvas/jspdf. Funciona normalmente;
-  se quiser reduzir o carregamento inicial, dá para fazer `import()` dinâmico dessas libs nos exporters
-  e na importação XLSX (otimização opcional, não altera comportamento).
+Ver [`SECURITY.md`](./SECURITY.md) para detalhes do modelo de autenticação e recomendações de hardening antes de uso com dados sensíveis.
