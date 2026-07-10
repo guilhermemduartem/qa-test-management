@@ -1,0 +1,1 @@
+ALTER TABLE qa_test_plans ADD COLUMN IF NOT EXISTS sprint TEXT;

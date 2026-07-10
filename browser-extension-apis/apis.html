@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Health Check de APIs</title>
+  <link rel="stylesheet" href="apis.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <h1>Health Check de APIs</h1>
+    </div>
+    <div class="controls">
+      <label>Ambiente
+        <select id="env"></select>
+      </label>
+      <button id="run" class="btn primary">Verificar</button>
+      <span id="summary" class="summary"></span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main>
+      <div class="filters" id="filters"></div>
+      <div id="grid" class="grid"></div>
+      <p id="empty" class="empty">Selecione um ambiente e clique em <b>Verificar</b>.</p>
+    </main>
+
+    <aside class="vp">
+      <div class="vp-head">
+        <span>Versões</span>
+        <button id="runAll" class="vp-run" title="Verificar todos os ambientes">Rodar todos</button>
+      </div>
+      <div class="vp-body" id="versions">
+        <p class="vp-empty">Nenhuma verificação realizada ainda.</p>
+      </div>
+    </aside>
+  </div>
+
+  <script src="apis-data.js"></script>
+  <script src="apis.js"></script>
+</body>
+</html>

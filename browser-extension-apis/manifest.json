@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Health Check de APIs — Status & Versões",
+  "version": "1.0.0",
+  "description": "Abre uma aba com o status e a versão de todas as APIs por ambiente (QA/testes).",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://*.miketec.com.br/*",
+    "http://*.aws.voeazul.com.br/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Abrir Health Check de APIs",
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

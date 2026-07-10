@@ -1,0 +1,21 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Configuração de deploy no Netlify (SPA Vite + React)
+# ═══════════════════════════════════════════════════════════════════════════
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Proxy CORS — encaminha para a Netlify Function
+[[redirects]]
+  from = "/api/proxy/*"
+  to = "/.netlify/functions/proxy/:splat"
+  status = 200
+
+# SPA fallback (deve ser o último redirect)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
