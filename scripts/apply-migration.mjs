@@ -1,5 +1,6 @@
 /* Runner de migration contra o Postgres do Supabase (sessão/pooler).
    A senha do banco é lida de supabase/.temp/db-password.txt (NÃO commitar).
+   Host/usuário do pooler vêm de env vars (SUPABASE_DB_HOST / SUPABASE_DB_USER).
    Uso: node scripts/apply-migration.mjs <arquivo.sql> */
 import { readFileSync } from 'node:fs';
 import { Client } from 'pg';
@@ -16,13 +17,20 @@ try {
 }
 if (!password) { console.error('❌ Arquivo de senha vazio.'); process.exit(1); }
 
+const host = process.env.SUPABASE_DB_HOST;
+const user = process.env.SUPABASE_DB_USER;
+if (!host || !user) {
+  console.error('❌ Defina SUPABASE_DB_HOST e SUPABASE_DB_USER (Dashboard → Project Settings → Database → Connection pooling).');
+  process.exit(1);
+}
+
 const sql = readFileSync(sqlFile, 'utf8');
 
 // Pooler de sessão (porta 5432) — suporta DDL.
 const client = new Client({
-  host: 'aws-1-us-east-1.pooler.supabase.com',
+  host,
   port: 5432,
-  user: 'postgres.qejqwhsfwvykgxabxdwt',
+  user,
   password,
   database: 'postgres',
   ssl: { rejectUnauthorized: false },
