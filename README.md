@@ -3,6 +3,7 @@
 Plataforma web completa de **gestão e documentação de QA** — do planejamento de testes à geração de evidências, passando por integração com Azure DevOps, monitoramento de APIs e colaboração em tempo real entre a equipe.
 
 **🔗 Demo:** [qas-reporter.netlify.app](https://qas-reporter.netlify.app/#/login)
+**Login de teste:** `gui@qa.com` / `Senha@123`
 
 Construído com **React + TypeScript + Vite** no front e **Supabase** (Postgres + Auth + Realtime + Storage) no back, sem servidor próprio para manter.
 
