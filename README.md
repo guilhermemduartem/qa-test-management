@@ -6,13 +6,7 @@ Construído com **React + TypeScript + Vite** no front e **Supabase** (Postgres 
 
 ### 🔗 Demo ao vivo
 
-**[qas-reporter.netlify.app](https://qas-reporter.netlify.app/#/login)**
-
-| | |
-|---|---|
-| **E-mail** | `gui@qa.com` |
-| **Senha** | `Teste@123` |
-| **Papel** | Leitura (viewer) — dá pra navegar por todo o sistema, sem risco de alterar os dados de demonstração |
+**[qas-reporter.netlify.app](https://qas-reporter.netlify.app/#/login)** — login: `gui@qa.com` / `Teste@123` (papel leitura/viewer — dá pra navegar por todo o sistema, sem risco de alterar os dados de demonstração)
 
 ---
 
