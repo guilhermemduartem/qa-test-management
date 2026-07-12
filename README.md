@@ -92,6 +92,3 @@ browser-extension/         extensão Chrome — gerador de dados de teste
 browser-extension-apis/    extensão Chrome — health check de APIs
 ```
 
-## Segurança
-
-Ver [`SECURITY.md`](./SECURITY.md) para detalhes do modelo de autenticação e recomendações de hardening antes de uso com dados sensíveis.
