@@ -18,6 +18,7 @@ import { EnderecoEuaPage } from './pages/tools/EnderecoEuaPage';
 import { ValidadorNfPage } from './pages/tools/ValidadorNfPage';
 import { CollectionPage } from './pages/tools/CollectionPage';
 import { DashboardPage } from './pages/tests/DashboardPage';
+import { AssistentePage } from './pages/tests/AssistentePage';
 import { CasosPage } from './pages/tests/CasosPage';
 import { RunsPage } from './pages/tests/RunsPage';
 import { PlanosPage } from './pages/tests/PlanosPage';
@@ -72,6 +73,7 @@ const router = createHashRouter(
     { path: '/ferramentas/validador-nf', element: <RequireAuth><ValidadorNfPage /></RequireAuth> },
     { path: '/ferramentas/collection', element: <RequireAuth><CollectionPage /></RequireAuth> },
     { path: '/testes', element: <RequireAuth><DashboardPage /></RequireAuth> },
+    { path: '/testes/assistente', element: <RequireAuth><AssistentePage /></RequireAuth> },
     { path: '/testes/casos', element: <RequireAuth><CasosPage /></RequireAuth> },
     { path: '/testes/runs', element: <RequireAuth><RunsPage /></RequireAuth> },
     { path: '/testes/planos', element: <RequireAuth><PlanosPage /></RequireAuth> },

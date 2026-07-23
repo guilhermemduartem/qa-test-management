@@ -50,7 +50,7 @@ export type ToolKey =
   | 'ofx' | 'endereco' | 'validador-nf' | 'collection';
 
 export type TestKey =
-  | 'dashboard' | 'casos' | 'runs' | 'planos' | 'rastreabilidade'
+  | 'dashboard' | 'assistente' | 'casos' | 'runs' | 'planos' | 'rastreabilidade'
   | 'defeitos' | 'melhorias' | 'exploratorio' | 'relatorios' | 'azure-cards';
 
 export type ApiKey = 'healthcheck' | 'runner' | 'config' | 'bulk-import' | 'bulk-import-runs';
@@ -145,6 +145,7 @@ const TOOL_CATEGORIES: { label: string; items: ToolItem[] }[] = [
 
 const TEST_ITEMS: { key: TestKey; label: string; path: string }[] = [
   { key: 'dashboard',      label: 'Dashboard',      path: '/testes' },
+  { key: 'assistente',     label: 'Assistente IA',  path: '/testes/assistente' },
   { key: 'planos',         label: 'Planejamento',   path: '/testes/planos' },
   { key: 'casos',          label: 'Casos de Teste', path: '/testes/casos' },
   { key: 'runs',           label: 'Execuções',      path: '/testes/runs' },

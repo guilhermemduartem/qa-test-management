@@ -2,6 +2,7 @@
    DefectsPage — Defeitos com integração opcional Azure DevOps.
    ═══════════════════════════════════════════════════════════ */
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { TestsLayout } from './TestsLayout';
 import { ProjectBar } from '../../components/tests/ProjectBar';
 import { Modal } from '../../components/Modal';
@@ -121,6 +122,22 @@ export function DefectsPage({ kind = 'bug' }: { kind?: DefectKind }) {
     if (activeId) load(activeId);
     else { setDefects([]); setOrigin(new Map()); }
   }, [activeId, load]);
+
+  // Deep-link: abre um defeito/melhoria vindo de ?defect=ID (ex.: link do Assistente).
+  const [defParams, setDefParams] = useSearchParams();
+  const defOpenedRef = useRef(false);
+  useEffect(() => {
+    if (defOpenedRef.current) return;
+    const id = defParams.get('defect');
+    if (!id || defects.length === 0) return;
+    const d = defects.find((x) => x.id === id);
+    if (d) {
+      setViewing(d);
+      defOpenedRef.current = true;
+      defParams.delete('defect');
+      setDefParams(defParams, { replace: true });
+    }
+  }, [defects, defParams, setDefParams]);
 
   useEffect(() => {
     listAzureConfigs().then(setAzureConfigs);
