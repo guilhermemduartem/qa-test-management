@@ -102,6 +102,11 @@ export function logout(): void {
   localStorage.removeItem(SESSION_KEY);
   localStorage.removeItem(PROFILES_KEY);
   sessionStorage.removeItem('qa_auth');
+  // limpa o histórico do Assistente de IA (todos os projetos) — só sai no logout
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('qa_chat_hist_')) localStorage.removeItem(k);
+  }
   getSupabaseClient()?.auth.signOut().catch(() => {});
 }
 

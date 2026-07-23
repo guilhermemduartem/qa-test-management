@@ -9,6 +9,7 @@
      • Excluir      → confirmação, só criador ou admin
    ═══════════════════════════════════════════════════════════ */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { TestsLayout } from './TestsLayout';
 import { ProjectBar } from '../../components/tests/ProjectBar';
@@ -119,6 +120,22 @@ export function CasosPage() {
     if (activeId) loadData(activeId);
     else { setSuites([]); setCases([]); }
   }, [activeId]);
+
+  // Deep-link: abre um caso específico vindo de ?case=ID (ex.: link do Assistente).
+  const [caseParams, setCaseParams] = useSearchParams();
+  const caseOpenedRef = useRef(false);
+  useEffect(() => {
+    if (caseOpenedRef.current) return;
+    const id = caseParams.get('case');
+    if (!id || cases.length === 0) return;
+    const c = cases.find((x) => x.id === id);
+    if (c) {
+      setViewing(c);
+      caseOpenedRef.current = true;
+      caseParams.delete('case');
+      setCaseParams(caseParams, { replace: true });
+    }
+  }, [cases, caseParams, setCaseParams]);
 
   // Suítes começam RECOLHIDAS — o usuário expande clicando na setinha.
 

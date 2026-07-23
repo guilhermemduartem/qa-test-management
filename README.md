@@ -27,6 +27,7 @@ Construído com **React + TypeScript + Vite** no front e **Supabase** (Postgres 
 - Planos, casos de teste, execuções (*runs*), rastreabilidade requisito ↔ caso
 - Gestão de defeitos com **sincronização bidirecional com Azure DevOps** (cria bug, adiciona comentários, acompanha status)
 - Sessões exploratórias, dashboard com indicadores e templates dinâmicos de bug por projeto
+- **Assistente IA** (Google Gemini): chat em linguagem natural sobre o projeto ativo — "quantos bugs críticos abertos?", "quais casos cobrem o card X?", "resume os passos do caso Y" — com respostas baseadas nos **dados reais** e **somente leitura**. Detalhes em [docs/assistente-ia.md](docs/assistente-ia.md)
 
 ### 🔌 Módulo de APIs
 - Cliente de API estilo Postman: coleções, execução em lote, importação de `.postman_collection`
@@ -50,6 +51,7 @@ Alguns problemas reais resolvidos durante o desenvolvimento:
 - **Cache de imagens fora do localStorage**: evidências em base64 podem estourar a cota do `localStorage`; o cache fica no **IndexedDB**, com o relatório guardando apenas uma chave — resolve um bug real de "relatório abre com dados antigos".
 - **Colaboração em tempo real sem conflito**: edição concorrente é resolvida com controle de revisão (`rev`) + merge seletivo, evitando que o upload assíncrono de uma imagem sobrescreva uma edição de texto feita durante o upload.
 - **RLS como fonte de verdade**: funções `SECURITY DEFINER` no Postgres (`qa_is_admin`, `qa_can_write`) centralizam a regra de permissão — a UI e o banco ficam alinhados por design, não por convenção.
+- **IA sem vazar dados nem chave**: o Assistente roda numa **Edge Function** (a chave da API nunca vai ao browser) e consulta o banco com o **JWT do próprio usuário** — a RLS garante que a IA só enxerga o que a pessoa já veria. Para caber no contexto de forma barata, envia um **índice compacto delimitado por `|`** (não JSON) e faz todas as contagens/taxas **no Postgres**, nunca no modelo.
 
 ---
 
